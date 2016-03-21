@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-package org.jenkinsci.plugins.plunger;
+package io.jenkins.plugins.plunger;
 
 import groovy.lang.GroovyCodeSource;
 import hudson.ExtensionList;

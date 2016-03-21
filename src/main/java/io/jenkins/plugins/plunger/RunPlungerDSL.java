@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jenkinsci.plugins.plunger;
+package io.jenkins.plugins.plunger;
 
 import hudson.Extension;
 import org.jenkinsci.plugins.scriptsecurity.sandbox.whitelists.BlanketWhitelist;
@@ -43,7 +43,7 @@ public class RunPlungerDSL extends GlobalVariable {
     public Object getValue(CpsScript script) throws Exception {
         return script.getClass()
                 .getClassLoader()
-                .loadClass("org.jenkinsci.plugins.plunger.RunPlunger")
+                .loadClass("RunPlunger")
                 .getConstructor(CpsScript.class)
                 .newInstance(script);
     }

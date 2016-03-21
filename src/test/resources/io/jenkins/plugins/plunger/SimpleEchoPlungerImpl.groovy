@@ -21,20 +21,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jenkinsci.plugins.plunger;
+package io.jenkins.plugins.plunger
 
-import hudson.Extension;
+import org.jenkinsci.plugins.workflow.cps.CpsScript
 
-@Extension
-public class SimpleEchoPlunger extends Plunger {
+class SimpleEchoPlungerImpl implements Serializable {
+    CpsScript script
 
-    @Override
-    public String getName() {
-        return "simpleEcho";
+    public SimpleEchoPlungerImpl(CpsScript script) {
+        this.script = script
     }
 
-    @Override
-    public String getPlungerClass() {
-        return "SimpleEchoPlungerImpl";
+    def call(Map args) {
+        for (int i = 0; i < args.entrySet().size(); i++) {
+            def e = args.entrySet().toList().get(i)
+            script.echo "echoing ${e.key} == ${e.value}"
+        }
     }
 }
