@@ -33,17 +33,17 @@ import org.jenkinsci.plugins.workflow.cps.GlobalVariable;
 import java.io.IOException;
 
 @Extension
-public class RunPlungerDSL extends GlobalVariable {
+public class RunNotifierDSL extends GlobalVariable {
     @Override
     public String getName() {
-        return "runPlunger";
+        return "runNotifier";
     }
 
     @Override
     public Object getValue(CpsScript script) throws Exception {
         return script.getClass()
                 .getClassLoader()
-                .loadClass("io.jenkins.plugins.plunger.RunPlunger")
+                .loadClass("io.jenkins.plugins.plunger.RunNotifier")
                 .getConstructor(CpsScript.class)
                 .newInstance(script);
     }

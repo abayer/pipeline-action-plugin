@@ -160,5 +160,22 @@ public abstract class Plunger implements ExtensionPoint {
         return plungerMap().get(name);
     }
 
+    /**
+     * Finds a {@link Plunger} that is a notifier with the given name.
+     *
+     * @return The notifier plunger for the given name if it exists, null if no such plunger exists, and an excption if
+     *           a non-notifier plunger exists for that name.
+     * @throws IllegalArgumentException if a non-notifier plunger exists with the given name.
+     */
+    public static Plunger getNotifier(String name) throws IllegalArgumentException {
+        Plunger p = getPlunger(name);
+
+        if (p != null && !p.isNotifier()) {
+            throw new IllegalArgumentException("Plunger with name " + name + " exists but is not a notifier.");
+        }
+
+        return p;
+    }
+
 
 }
