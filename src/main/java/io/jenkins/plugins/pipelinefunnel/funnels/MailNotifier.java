@@ -18,6 +18,7 @@ package io.jenkins.plugins.pipelinefunnel.funnels;
 
 import hudson.Extension;
 import io.jenkins.plugins.pipelinefunnel.Funnel;
+import io.jenkins.plugins.pipelinefunnel.FunnelType;
 
 @Extension
 public class MailNotifier extends Funnel {
@@ -33,7 +34,7 @@ public class MailNotifier extends Funnel {
     }
 
     @Override
-    public boolean isNotifier() {
-        return true;
+    public FunnelType funnelType() {
+        return FunnelType.NOTIFIER;
     }
 }

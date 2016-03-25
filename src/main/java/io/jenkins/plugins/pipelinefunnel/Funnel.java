@@ -71,8 +71,8 @@ public abstract class Funnel implements ExtensionPoint {
      *
      * @return True if the funnel is a notifier, false otherwise.
      */
-    public boolean isNotifier() {
-        return false;
+    public FunnelType funnelType() {
+        return FunnelType.STANDARD;
     }
 
     /**
@@ -156,8 +156,25 @@ public abstract class Funnel implements ExtensionPoint {
      *
      * @return The funnel for the given name if it exists.
      */
-    public static Funnel getFunnel(String name) {
+    private static Funnel getFunnelFromAll(String name) {
         return funnelMap().get(name);
+    }
+
+    /**
+     * Finds a {@link Funnel} that is a standard funnel with the given name.
+     *
+     * @return The funnel for the given name if it exists, null if no such funnel exists, and an exception if
+     *           a non-standard funnel exists for that name.
+     * @throws IllegalArgumentException if a non-standard funnel exists with the given name.
+     */
+    public static Funnel getFunnel(String name) throws IllegalArgumentException {
+        Funnel p = getFunnelFromAll(name);
+
+        if (p != null && p.funnelType() != FunnelType.STANDARD) {
+            throw new IllegalArgumentException("Funnel with name " + name + " exists but is not a standard funnel.");
+        }
+
+        return p;
     }
 
     /**
@@ -168,14 +185,13 @@ public abstract class Funnel implements ExtensionPoint {
      * @throws IllegalArgumentException if a non-notifier funnel exists with the given name.
      */
     public static Funnel getNotifier(String name) throws IllegalArgumentException {
-        Funnel p = getFunnel(name);
+        Funnel p = getFunnelFromAll(name);
 
-        if (p != null && !p.isNotifier()) {
+        if (p != null && p.funnelType() != FunnelType.NOTIFIER) {
             throw new IllegalArgumentException("Funnel with name " + name + " exists but is not a notifier.");
         }
 
         return p;
     }
-
 
 }
