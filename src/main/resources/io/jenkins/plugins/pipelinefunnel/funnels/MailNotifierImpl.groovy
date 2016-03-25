@@ -28,20 +28,13 @@ import org.jenkinsci.plugins.workflow.cps.CpsScript
 
 
 class MailNotifierImpl implements Serializable {
-    final static def mapFields = ["to",
-                                  "from",
-                                  "charset",
-                                  "subject",
-                                  "body",
-                                  "cc",
-                                  "bcc",
-                                  "replyTo",
-                                  "mimeType"]
 
     CpsScript script
+    List<String> fields
 
-    public MailNotifierImpl(CpsScript script) {
+    public MailNotifierImpl(CpsScript script, List<String> fields) {
         this.script = script
+        this.fields = fields
     }
 
     def call(Map<String,Object> args) {
@@ -51,6 +44,6 @@ class MailNotifierImpl implements Serializable {
 
     @NonCPS
     private Map copyMailArgs(Map<String,Object> origArgs) {
-        return origArgs.findAll { it.key in mapFields }
+        return origArgs.findAll { it.key in fields }
     }
 }

@@ -25,12 +25,20 @@ package io.jenkins.plugins.pipelinefunnel;
 
 import hudson.Extension;
 
+import java.util.Collections;
+import java.util.List;
+
 @Extension
 public class SimpleEchoFunnel extends Funnel {
 
     @Override
     public String getName() {
         return "simpleEcho";
+    }
+
+    @Override
+    public List<String> getFields() {
+        return Collections.emptyList();
     }
 
     @Override

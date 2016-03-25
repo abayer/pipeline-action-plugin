@@ -27,9 +27,11 @@ import org.jenkinsci.plugins.workflow.cps.CpsScript
 
 class SimpleEchoFunnelImpl implements Serializable {
     CpsScript script
+    List<String> fields
 
-    public SimpleEchoFunnelImpl(CpsScript script) {
+    public SimpleEchoFunnelImpl(CpsScript script, List<String> fields) {
         this.script = script
+        this.fields = fields
     }
 
     def call(Map args) {

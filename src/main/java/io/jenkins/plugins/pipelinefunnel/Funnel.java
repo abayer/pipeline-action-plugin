@@ -33,6 +33,7 @@ import org.jenkinsci.plugins.workflow.cps.CpsThread;
 import javax.annotation.Nonnull;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.apache.commons.lang.exception.ExceptionUtils.getFullStackTrace;
@@ -58,6 +59,13 @@ public abstract class Funnel implements ExtensionPoint {
      * @return The name of the funnel.
      */
     public abstract @Nonnull String getName();
+
+    /**
+     * Get the known fields for this funnel. Can be empty if there are no specific keys required or needed.
+     *
+     * @return List of Map keys for this funnel's argument, or an empty list.
+     */
+    public abstract List<String> getFields();
 
     /**
      * The name of the class the funnel is implemented in under src/main/resources.
@@ -122,8 +130,8 @@ public abstract class Funnel implements ExtensionPoint {
                 .getShell()
                 .getClassLoader()
                 .parseClass(getScriptSource())
-                .getConstructor(CpsScript.class)
-                .newInstance(cpsScript);
+                .getConstructor(CpsScript.class, List.class)
+                .newInstance(cpsScript, getFields());
     }
 
     /**
