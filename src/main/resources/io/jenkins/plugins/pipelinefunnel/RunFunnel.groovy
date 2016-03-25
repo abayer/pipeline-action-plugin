@@ -35,13 +35,21 @@ class RunFunnel implements Serializable {
     }
 
     def call(Map args) {
+        return call(FunnelType.STANDARD, args)
+    }
+
+    def call(String type, Map args) {
+        return call(FunnelType.fromString(type), args)
+    }
+
+    def call(FunnelType type, Map args) {
         String name = args?.name
 
-        return getFunnel(name).call(args)
+        return getFunnel(name, type)?.call(args)
     }
 
     @NonCPS
-    def getFunnel(String name) {
-        return Funnel.getFunnel(name)?.getScript(script)
+    def getFunnel(String name, FunnelType type) {
+        return Funnel.getFunnel(name, type)?.getScript(script)
     }
 }

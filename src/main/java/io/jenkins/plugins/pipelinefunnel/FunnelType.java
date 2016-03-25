@@ -40,4 +40,16 @@ public enum FunnelType {
     public String getType() {
         return type;
     }
+
+    public static FunnelType fromString(String t) throws IllegalArgumentException {
+        if (t != null) {
+            for (FunnelType f : FunnelType.values()) {
+                if (t.equalsIgnoreCase(f.getType())) {
+                    return f;
+                }
+            }
+        }
+
+        throw new IllegalArgumentException("No FunnelType with type '" + t + "' found.");
+    }
 }

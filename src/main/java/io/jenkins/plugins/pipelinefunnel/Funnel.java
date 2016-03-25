@@ -161,34 +161,33 @@ public abstract class Funnel implements ExtensionPoint {
     }
 
     /**
-     * Finds a {@link Funnel} that is a standard funnel with the given name.
+     * Finds a {@link Funnel} of standard type with the given name.
      *
-     * @return The funnel for the given name if it exists, null if no such funnel exists, and an exception if
-     *           a non-standard funnel exists for that name.
-     * @throws IllegalArgumentException if a non-standard funnel exists with the given name.
+     * @param name name of the funnel to get
+     * @return The funnel for the given name if it exists, null if no such funnel exists, and an exception if a funnel
+     *           of a type other than standard exists for that name.
+     * @throws IllegalArgumentException
      */
     public static Funnel getFunnel(String name) throws IllegalArgumentException {
-        Funnel p = getFunnelFromAll(name);
-
-        if (p != null && p.funnelType() != FunnelType.STANDARD) {
-            throw new IllegalArgumentException("Funnel with name " + name + " exists but is not a standard funnel.");
-        }
-
-        return p;
+        return getFunnel(name, FunnelType.STANDARD);
     }
 
     /**
-     * Finds a {@link Funnel} that is a notifier with the given name.
+     * Finds a {@link Funnel} that is of the given funnel type with the given name.
      *
-     * @return The notifier funnel for the given name if it exists, null if no such funnel exists, and an exception if
-     *           a non-notifier funnel exists for that name.
-     * @throws IllegalArgumentException if a non-notifier funnel exists with the given name.
+     * @param name The name of the funnel to get
+     * @param type The type of the funnel to get
+     *
+     * @return The funnel for the given name if it exists, null if no such funnel exists, and an exception if
+     *           a funnel of a different type exists for that name.
+     *
+     * @throws IllegalArgumentException if a funnel of a different type exists with the given name.
      */
-    public static Funnel getNotifier(String name) throws IllegalArgumentException {
+    public static Funnel getFunnel(String name, FunnelType type) throws IllegalArgumentException {
         Funnel p = getFunnelFromAll(name);
 
-        if (p != null && p.funnelType() != FunnelType.NOTIFIER) {
-            throw new IllegalArgumentException("Funnel with name " + name + " exists but is not a notifier.");
+        if (p != null && p.funnelType() != type) {
+            throw new IllegalArgumentException("Funnel with name " + name + " exists but is not of type '" + type.getType() + "'.");
         }
 
         return p;
