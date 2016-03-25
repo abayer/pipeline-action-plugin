@@ -14,13 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.jenkins.plugins.plunger.plungers;
+package io.jenkins.plugins.pipelinefunnel.funnels;
 
 import hudson.Extension;
-import io.jenkins.plugins.plunger.Plunger;
+import io.jenkins.plugins.pipelinefunnel.Funnel;
 
 @Extension
-public class MailNotifier extends Plunger {
+public class MailNotifier extends Funnel {
 
     @Override
     public String getName() {
@@ -28,7 +28,7 @@ public class MailNotifier extends Plunger {
     }
 
     @Override
-    public String getPlungerClass() {
+    public String getFunnelClass() {
         return "MailNotifierImpl";
     }
 

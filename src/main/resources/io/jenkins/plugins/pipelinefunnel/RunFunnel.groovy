@@ -21,27 +21,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.jenkins.plugins.plunger
+package io.jenkins.plugins.pipelinefunnel
 
 import com.cloudbees.groovy.cps.NonCPS
 import org.jenkinsci.plugins.workflow.cps.CpsScript
 
 // TODO: May want to move this to an actual class extending Step to avoid some weirdness.
-class RunNotifier implements Serializable {
+class RunFunnel implements Serializable {
     CpsScript script
 
-    RunNotifier(CpsScript script) {
+    RunFunnel(CpsScript script) {
         this.script = script
     }
 
     def call(Map args) {
         String name = args?.name
 
-        return getPlunger(name).call(args)
+        return getFunnel(name).call(args)
     }
 
     @NonCPS
-    def getPlunger(String name) {
-        return Plunger.getNotifier(name)?.getScript(script)
+    def getFunnel(String name) {
+        return Funnel.getFunnel(name)?.getScript(script)
     }
 }

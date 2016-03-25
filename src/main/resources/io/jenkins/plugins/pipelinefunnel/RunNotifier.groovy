@@ -21,36 +21,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.jenkins.plugins.plunger.plungers
+package io.jenkins.plugins.pipelinefunnel
 
 import com.cloudbees.groovy.cps.NonCPS
 import org.jenkinsci.plugins.workflow.cps.CpsScript
 
-
-class MailNotifierImpl implements Serializable {
-    final static def mapFields = ["to",
-                                  "from",
-                                  "charset",
-                                  "subject",
-                                  "body",
-                                  "cc",
-                                  "bcc",
-                                  "replyTo",
-                                  "mimeType"]
-
+// TODO: May want to move this to an actual class extending Step to avoid some weirdness.
+class RunNotifier implements Serializable {
     CpsScript script
 
-    public MailNotifierImpl(CpsScript script) {
+    RunNotifier(CpsScript script) {
         this.script = script
     }
 
-    def call(Map<String,Object> args) {
-        def mailArgs = copyMailArgs(args)
-        script.mail(mailArgs)
+    def call(Map args) {
+        String name = args?.name
+
+        return getFunnel(name).call(args)
     }
 
     @NonCPS
-    private Map copyMailArgs(Map<String,Object> origArgs) {
-        return origArgs.findAll { it.key in mapFields }
+    def getFunnel(String name) {
+        return Funnel.getNotifier(name)?.getScript(script)
     }
 }

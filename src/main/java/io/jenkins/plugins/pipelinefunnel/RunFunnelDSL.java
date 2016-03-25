@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.jenkins.plugins.plunger;
+package io.jenkins.plugins.pipelinefunnel;
 
 import hudson.Extension;
 import org.jenkinsci.plugins.scriptsecurity.sandbox.whitelists.BlanketWhitelist;
@@ -33,17 +33,17 @@ import org.jenkinsci.plugins.workflow.cps.GlobalVariable;
 import java.io.IOException;
 
 @Extension
-public class RunNotifierDSL extends GlobalVariable {
+public class RunFunnelDSL extends GlobalVariable {
     @Override
     public String getName() {
-        return "runNotifier";
+        return "runFunnel";
     }
 
     @Override
     public Object getValue(CpsScript script) throws Exception {
         return script.getClass()
                 .getClassLoader()
-                .loadClass("io.jenkins.plugins.plunger.RunNotifier")
+                .loadClass("io.jenkins.plugins.pipelinefunnel.RunFunnel")
                 .getConstructor(CpsScript.class)
                 .newInstance(script);
     }

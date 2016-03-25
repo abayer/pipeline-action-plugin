@@ -31,12 +31,12 @@
   </parent>
 
   <groupId>org.jenkins-ci.plugins</groupId>
-  <artifactId>plunger-plugin</artifactId>
+  <artifactId>pipeline-funnel-plugin</artifactId>
   <version>0.1-SNAPSHOT</version>
   <packaging>hpi</packaging>
-  <name>Plunger plugin</name>
-  <description>To-be-renamed plugin for providing an extension point for contributing Pipeline snippets to Jenkins in a consistent manner.</description>
-  <url>https://wiki.jenkins-ci.org/display/JENKINS/Plunger+Plugin</url>
+  <name>Pipeline Funnel plugin</name>
+  <description>A plugin for providing an extension point for contributing Pipeline snippets to Jenkins in a consistent manner.</description>
+  <url>https://wiki.jenkins-ci.org/display/JENKINS/Pipeline+Funnel+Plugin</url>
 
   <licenses>
     <license>
@@ -58,9 +58,9 @@
   </developers>
 
   <scm>
-    <connection>scm:git:git://git@github.com/abayer/plunger-plugin.git</connection>
-    <developerConnection>scm:git:git@github.com:abayer/plunger-plugin.git</developerConnection>
-    <url>https://github.com/abayer/plunger-plugin</url>
+    <connection>scm:git:git://git@github.com/abayer/pipeline-funnel-plugin.git</connection>
+    <developerConnection>scm:git:git@github.com:abayer/pipeline-funnel-plugin.git</developerConnection>
+    <url>https://github.com/abayer/pipeline-funnel-plugin</url>
   </scm>
   
   <build>

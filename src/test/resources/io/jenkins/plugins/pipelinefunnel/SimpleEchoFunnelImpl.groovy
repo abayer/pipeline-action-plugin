@@ -21,14 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.jenkins.plugins.plunger
+package io.jenkins.plugins.pipelinefunnel
 
 import org.jenkinsci.plugins.workflow.cps.CpsScript
 
-class SimpleEchoPlungerImpl implements Serializable {
+class SimpleEchoFunnelImpl implements Serializable {
     CpsScript script
 
-    public SimpleEchoPlungerImpl(CpsScript script) {
+    public SimpleEchoFunnelImpl(CpsScript script) {
         this.script = script
     }
 

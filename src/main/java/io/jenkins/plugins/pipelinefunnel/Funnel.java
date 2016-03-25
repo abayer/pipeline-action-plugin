@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-package io.jenkins.plugins.plunger;
+package io.jenkins.plugins.pipelinefunnel;
 
 import groovy.lang.GroovyCodeSource;
 import hudson.ExtensionList;
@@ -47,29 +47,29 @@ import static org.apache.commons.lang.exception.ExceptionUtils.getFullStackTrace
  * a strict subset of valid {@link org.jenkinsci.plugins.workflow.cps.global.UserDefinedGlobalVariable}-style scripts,
  * which can be used in both forms.
  */
-public abstract class Plunger implements ExtensionPoint {
+public abstract class Funnel implements ExtensionPoint {
 
     private GroovyCodeSource scriptSource;
 
     /**
-     * The name of the plunger. Should be unique.
+     * The name of the funnel. Should be unique.
      * TODO: Figure out how to enforce uniqueness?
      * 
-     * @return The name of the plunger.
+     * @return The name of the funnel.
      */
     public abstract @Nonnull String getName();
 
     /**
-     * The name of the class the plunger is implemented in under src/main/resources.
+     * The name of the class the funnel is implemented in under src/main/resources.
      *
      * @return The class name.
      */
-    public abstract @Nonnull String getPlungerClass();
+    public abstract @Nonnull String getFunnelClass();
 
     /**
-     * Whether this plunger is a notifier.
+     * Whether this funnel is a notifier.
      *
-     * @return True if the plunger is a notifier, false otherwise.
+     * @return True if the funnel is a notifier, false otherwise.
      */
     public boolean isNotifier() {
         return false;
@@ -87,8 +87,8 @@ public abstract class Plunger implements ExtensionPoint {
     public GroovyCodeSource getScriptSource() throws Exception {
         if (scriptSource == null) {
             String scriptUrlString = getClass().getPackage().getName().replace('$', '/').replace('.', '/')
-                    + '/' + getPlungerClass() + ".groovy";
-            // Expect that the script will be at package/name/className/plungerClass.groovy
+                    + '/' + getFunnelClass() + ".groovy";
+            // Expect that the script will be at package/name/className/funnelClass.groovy
             URL scriptUrl = getClass().getClassLoader().getResource(scriptUrlString);
 
             try {
@@ -127,24 +127,24 @@ public abstract class Plunger implements ExtensionPoint {
     }
 
     /**
-     * Returns all the registered {@link Plunger}s.
+     * Returns all the registered {@link Funnel}s.
      *
-     * @return All {@link Plunger}s.
+     * @return All {@link Funnel}s.
      */
-    public static ExtensionList<Plunger> all() {
-        return ExtensionList.lookup(Plunger.class);
+    public static ExtensionList<Funnel> all() {
+        return ExtensionList.lookup(Funnel.class);
     }
 
 
     /**
-     * Returns a map of all registered {@link Plunger}s by name.
+     * Returns a map of all registered {@link Funnel}s by name.
      *
-     * @return All {@link Plunger}s keyed by name.
+     * @return All {@link Funnel}s keyed by name.
      */
-    public static Map<String,Plunger> plungerMap() {
-        Map<String,Plunger> m = new HashMap<String, Plunger>();
+    public static Map<String,Funnel> funnelMap() {
+        Map<String,Funnel> m = new HashMap<String, Funnel>();
 
-        for (Plunger p : all()) {
+        for (Funnel p : all()) {
             m.put(p.getName(), p);
         }
 
@@ -152,26 +152,26 @@ public abstract class Plunger implements ExtensionPoint {
     }
 
     /**
-     * Finds a {@link Plunger} with the given name.
+     * Finds a {@link Funnel} with the given name.
      *
-     * @return The plunger for the given name if it exists.
+     * @return The funnel for the given name if it exists.
      */
-    public static Plunger getPlunger(String name) {
-        return plungerMap().get(name);
+    public static Funnel getFunnel(String name) {
+        return funnelMap().get(name);
     }
 
     /**
-     * Finds a {@link Plunger} that is a notifier with the given name.
+     * Finds a {@link Funnel} that is a notifier with the given name.
      *
-     * @return The notifier plunger for the given name if it exists, null if no such plunger exists, and an excption if
-     *           a non-notifier plunger exists for that name.
-     * @throws IllegalArgumentException if a non-notifier plunger exists with the given name.
+     * @return The notifier funnel for the given name if it exists, null if no such funnel exists, and an exception if
+     *           a non-notifier funnel exists for that name.
+     * @throws IllegalArgumentException if a non-notifier funnel exists with the given name.
      */
-    public static Plunger getNotifier(String name) throws IllegalArgumentException {
-        Plunger p = getPlunger(name);
+    public static Funnel getNotifier(String name) throws IllegalArgumentException {
+        Funnel p = getFunnel(name);
 
         if (p != null && !p.isNotifier()) {
-            throw new IllegalArgumentException("Plunger with name " + name + " exists but is not a notifier.");
+            throw new IllegalArgumentException("Funnel with name " + name + " exists but is not a notifier.");
         }
 
         return p;

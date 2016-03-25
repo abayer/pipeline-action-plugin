@@ -21,20 +21,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.jenkins.plugins.plunger;
+package io.jenkins.plugins.pipelinefunnel.funnels
 
-import hudson.Extension;
+import com.cloudbees.groovy.cps.NonCPS
+import org.jenkinsci.plugins.workflow.cps.CpsScript
 
-@Extension
-public class SimpleEchoPlunger extends Plunger {
 
-    @Override
-    public String getName() {
-        return "simpleEcho";
+class MailNotifierImpl implements Serializable {
+    final static def mapFields = ["to",
+                                  "from",
+                                  "charset",
+                                  "subject",
+                                  "body",
+                                  "cc",
+                                  "bcc",
+                                  "replyTo",
+                                  "mimeType"]
+
+    CpsScript script
+
+    public MailNotifierImpl(CpsScript script) {
+        this.script = script
     }
 
-    @Override
-    public String getPlungerClass() {
-        return "SimpleEchoPlungerImpl";
+    def call(Map<String,Object> args) {
+        def mailArgs = copyMailArgs(args)
+        script.mail(mailArgs)
+    }
+
+    @NonCPS
+    private Map copyMailArgs(Map<String,Object> origArgs) {
+        return origArgs.findAll { it.key in mapFields }
     }
 }
