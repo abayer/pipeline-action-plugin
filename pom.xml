@@ -31,12 +31,12 @@
   </parent>
 
   <groupId>org.jenkins-ci.plugins</groupId>
-  <artifactId>pipeline-funnel-plugin</artifactId>
+  <artifactId>pipeline-action-plugin</artifactId>
   <version>0.1-SNAPSHOT</version>
   <packaging>hpi</packaging>
-  <name>Pipeline Funnel plugin</name>
+  <name>Pipeline Action plugin</name>
   <description>A plugin for providing an extension point for contributing Pipeline snippets to Jenkins in a consistent manner.</description>
-  <url>https://wiki.jenkins-ci.org/display/JENKINS/Pipeline+Funnel+Plugin</url>
+  <url>https://wiki.jenkins-ci.org/display/JENKINS/Pipeline+Action+Plugin</url>
 
   <licenses>
     <license>
@@ -58,9 +58,9 @@
   </developers>
 
   <scm>
-    <connection>scm:git:git://git@github.com/abayer/pipeline-funnel-plugin.git</connection>
-    <developerConnection>scm:git:git@github.com:abayer/pipeline-funnel-plugin.git</developerConnection>
-    <url>https://github.com/abayer/pipeline-funnel-plugin</url>
+    <connection>scm:git:git://git@github.com/abayer/pipeline-action-plugin.git</connection>
+    <developerConnection>scm:git:git@github.com:abayer/pipeline-action-plugin.git</developerConnection>
+    <url>https://github.com/abayer/pipeline-action-plugin</url>
   </scm>
   
   <build>
