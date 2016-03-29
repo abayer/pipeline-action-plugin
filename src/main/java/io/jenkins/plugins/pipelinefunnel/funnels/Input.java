@@ -18,41 +18,29 @@ package io.jenkins.plugins.pipelinefunnel.funnels;
 
 import hudson.Extension;
 import io.jenkins.plugins.pipelinefunnel.Funnel;
-import io.jenkins.plugins.pipelinefunnel.FunnelType;
 
 import java.util.Arrays;
 import java.util.List;
 
 @Extension
-public class MailNotifier extends Funnel {
+public class Input extends Funnel {
 
     @Override
     public String getName() {
-        return "email";
+        return "input";
     }
 
     @Override
     public List<String> getFields() {
         return Arrays.asList(
-                "to",
-                "from",
-                "charset",
-                "subject",
-                "body",
-                "cc",
-                "bcc",
-                "replyTo",
-                "mimeType"
+                "text",
+                "id"
         );
     }
 
     @Override
     public String getFunnelClass() {
-        return "MailNotifierImpl";
+        return "InputImpl";
     }
 
-    @Override
-    public FunnelType funnelType() {
-        return FunnelType.NOTIFIER;
-    }
 }
