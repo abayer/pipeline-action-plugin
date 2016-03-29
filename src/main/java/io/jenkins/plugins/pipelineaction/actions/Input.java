@@ -33,8 +33,10 @@ public class Input extends PipelineAction {
     @Override
     public List<String> getFields() {
         return Arrays.asList(
-                "text",
-                "id"
+                "message",
+                "id",
+                "ok",
+                "submitter"
         );
     }
 

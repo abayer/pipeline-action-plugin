@@ -23,6 +23,7 @@
  */
 package io.jenkins.plugins.pipelineaction.actions
 
+import com.cloudbees.groovy.cps.NonCPS
 import org.jenkinsci.plugins.workflow.cps.CpsScript
 
 
@@ -37,20 +38,17 @@ class InputImpl implements Serializable {
     }
 
     def call(Map<String,Object> args) {
-        def id
-        if (args.containsKey("id") && args.id != null) {
-            id = args.id
-        }
-
-        if (args.containsKey("text") && args.text != null) {
-            if (id != null) {
-                script.input(message: args.text, id: id)
-            } else {
-                script.input(message: args.text)
-            }
+        if (args.containsKey("message") && args.message != null) {
+            script.input(copyInputArgs(args))
         } else {
-            script.error("Non-null 'text' must be specified with 'input' action.")
+            script.error("Non-null 'message' must be specified with 'input' action.")
         }
 
     }
+
+    @NonCPS
+    private Map copyInputArgs(Map<String,Object> origArgs) {
+        return origArgs.findAll { it.key in fields }
+    }
+
 }

@@ -48,7 +48,7 @@ class RunPipelineAction implements Serializable {
         if (name == null) {
             name = "script"
         }
-        
+
         return getPipelineAction(name, type)?.call(args)
     }
 
