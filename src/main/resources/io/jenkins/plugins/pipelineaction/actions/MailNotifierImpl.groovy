@@ -21,31 +21,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.jenkins.plugins.pipelinefunnel.funnels
+package io.jenkins.plugins.pipelineaction.actions
 
+import com.cloudbees.groovy.cps.NonCPS
 import org.jenkinsci.plugins.workflow.cps.CpsScript
 
 
-class ScriptImpl implements Serializable {
+class MailNotifierImpl implements Serializable {
 
     CpsScript script
     List<String> fields
 
-    public ScriptImpl(CpsScript script, List<String> fields) {
+    public MailNotifierImpl(CpsScript script, List<String> fields) {
         this.script = script
         this.fields = fields
     }
 
     def call(Map<String,Object> args) {
-        if (args.containsKey("script") && args.script != null) {
-            if (script.isUnix()) {
-                script.sh(args.script)
-            } else {
-                script.bat(args.script)
-            }
-        } else {
-            script.error("Non-null 'script' must be specified with 'script' action.")
-        }
+        def mailArgs = copyMailArgs(args)
+        script.mail(mailArgs)
+    }
 
+    @NonCPS
+    private Map copyMailArgs(Map<String,Object> origArgs) {
+        return origArgs.findAll { it.key in fields }
     }
 }

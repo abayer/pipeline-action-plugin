@@ -14,17 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.jenkins.plugins.pipelinefunnel.funnels;
+package io.jenkins.plugins.pipelineaction.actions;
 
 import hudson.Extension;
-import io.jenkins.plugins.pipelinefunnel.Funnel;
-import io.jenkins.plugins.pipelinefunnel.FunnelType;
+import io.jenkins.plugins.pipelineaction.PipelineAction;
+import io.jenkins.plugins.pipelineaction.PipelineActionType;
 
 import java.util.Arrays;
 import java.util.List;
 
 @Extension
-public class MailNotifier extends Funnel {
+public class MailNotifier extends PipelineAction {
 
     @Override
     public String getName() {
@@ -47,12 +47,12 @@ public class MailNotifier extends Funnel {
     }
 
     @Override
-    public String getFunnelClass() {
+    public String getPipelineActionClass() {
         return "MailNotifierImpl";
     }
 
     @Override
-    public FunnelType funnelType() {
-        return FunnelType.NOTIFIER;
+    public PipelineActionType pipelineActionType() {
+        return PipelineActionType.NOTIFIER;
     }
 }

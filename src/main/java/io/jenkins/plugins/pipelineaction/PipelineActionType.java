@@ -21,28 +21,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.jenkins.plugins.pipelinefunnel;
 
-import hudson.Extension;
+package io.jenkins.plugins.pipelineaction;
 
-import java.util.Collections;
-import java.util.List;
 
-@Extension
-public class SimpleEchoFunnel extends Funnel {
+public enum PipelineActionType {
 
-    @Override
-    public String getName() {
-        return "simpleEcho";
+    STANDARD("standard"),
+    NOTIFIER("notifier"),
+    ;
+
+    private final String type;
+
+    PipelineActionType(String type) {
+        this.type = type;
     }
 
-    @Override
-    public List<String> getFields() {
-        return Collections.emptyList();
+    public String getType() {
+        return type;
     }
 
-    @Override
-    public String getFunnelClass() {
-        return "SimpleEchoFunnelImpl";
+    public static PipelineActionType fromString(String t) throws IllegalArgumentException {
+        if (t != null) {
+            for (PipelineActionType f : PipelineActionType.values()) {
+                if (t.equalsIgnoreCase(f.getType())) {
+                    return f;
+                }
+            }
+        }
+
+        throw new IllegalArgumentException("No PipelineActionType with type '" + t + "' found.");
     }
 }

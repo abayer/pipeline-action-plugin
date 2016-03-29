@@ -21,35 +21,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.jenkins.plugins.pipelinefunnel
+package io.jenkins.plugins.pipelineaction
 
-import com.cloudbees.groovy.cps.NonCPS
 import org.jenkinsci.plugins.workflow.cps.CpsScript
 
-// TODO: May want to move this to an actual class extending Step to avoid some weirdness.
-class RunFunnel implements Serializable {
+class SimpleEchoFunnelImpl implements Serializable {
     CpsScript script
+    List<String> fields
 
-    RunFunnel(CpsScript script) {
+    public SimpleEchoFunnelImpl(CpsScript script, List<String> fields) {
         this.script = script
+        this.fields = fields
     }
 
     def call(Map args) {
-        return call(FunnelType.STANDARD, args)
-    }
-
-    def call(String type, Map args) {
-        return call(FunnelType.fromString(type), args)
-    }
-
-    def call(FunnelType type, Map args) {
-        String name = args?.name
-
-        return getFunnel(name, type)?.call(args)
-    }
-
-    @NonCPS
-    def getFunnel(String name, FunnelType type) {
-        return Funnel.getFunnel(name, type)?.getScript(script)
+        for (int i = 0; i < args.entrySet().size(); i++) {
+            def e = args.entrySet().toList().get(i)
+            script.echo "echoing ${e.key} == ${e.value}"
+        }
     }
 }

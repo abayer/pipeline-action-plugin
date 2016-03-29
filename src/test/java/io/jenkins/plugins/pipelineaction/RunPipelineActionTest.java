@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.jenkins.plugins.pipelinefunnel;
+package io.jenkins.plugins.pipelineaction;
 
 import org.jenkinsci.plugins.workflow.cps.CpsScmFlowDefinition;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
@@ -35,7 +35,7 @@ import org.junit.runners.model.Statement;
 import org.jvnet.hudson.test.BuildWatcher;
 import org.jvnet.hudson.test.RestartableJenkinsRule;
 
-public class RunFunnelTest {
+public class RunPipelineActionTest {
     @ClassRule
     public static BuildWatcher buildWatcher = new BuildWatcher();
     @Rule
@@ -47,7 +47,7 @@ public class RunFunnelTest {
         sampleRepo.init();
         sampleRepo.write("Jenkinsfile",
                 "node {\n"
-                        + "runFunnel([name:'simpleEcho',\n"
+                        + "runPipelineAction([name:'simpleEcho',\n"
                         + "pants:'trousers',\n"
                         + "shirts:'polos'])\n"
                         + "}");

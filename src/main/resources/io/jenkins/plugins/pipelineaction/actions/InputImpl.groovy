@@ -21,23 +21,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.jenkins.plugins.pipelinefunnel
+package io.jenkins.plugins.pipelineaction.actions
 
 import org.jenkinsci.plugins.workflow.cps.CpsScript
 
-class SimpleEchoFunnelImpl implements Serializable {
+
+class InputImpl implements Serializable {
+
     CpsScript script
     List<String> fields
 
-    public SimpleEchoFunnelImpl(CpsScript script, List<String> fields) {
+    public InputImpl(CpsScript script, List<String> fields) {
         this.script = script
         this.fields = fields
     }
 
-    def call(Map args) {
-        for (int i = 0; i < args.entrySet().size(); i++) {
-            def e = args.entrySet().toList().get(i)
-            script.echo "echoing ${e.key} == ${e.value}"
+    def call(Map<String,Object> args) {
+        def id
+        if (args.containsKey("id") && args.id != null) {
+            id = args.id
         }
+
+        if (args.containsKey("text") && args.text != null) {
+            if (id != null) {
+                script.input(message: args.text, id: id)
+            } else {
+                script.input(message: args.text)
+            }
+        } else {
+            script.error("Non-null 'text' must be specified with 'input' action.")
+        }
+
     }
 }

@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-package io.jenkins.plugins.pipelinefunnel;
+package io.jenkins.plugins.pipelineaction;
 
 import groovy.lang.GroovyCodeSource;
 import hudson.ExtensionList;
@@ -49,45 +49,45 @@ import static org.apache.commons.lang.exception.ExceptionUtils.getFullStackTrace
  * a strict subset of valid {@link org.jenkinsci.plugins.workflow.cps.global.UserDefinedGlobalVariable}-style scripts,
  * which can be used in both forms.
  */
-public abstract class Funnel implements ExtensionPoint {
+public abstract class PipelineAction implements ExtensionPoint {
 
     private GroovyCodeSource scriptSource;
 
     /**
-     * The name of the funnel. Should be unique.
+     * The name of the pipeline action. Should be unique.
      * TODO: Figure out how to enforce uniqueness?
      * 
-     * @return The name of the funnel.
+     * @return The name of the pipeline action.
      */
     public abstract @Nonnull String getName();
 
     /**
-     * The name of the class the funnel is implemented in under src/main/resources.
+     * The name of the class the piepeline action is implemented in under src/main/resources.
      *
      * @return The class name.
      */
-    public abstract @Nonnull String getFunnelClass();
+    public abstract @Nonnull String getPipelineActionClass();
 
     /**
-     * Whether this funnel is a notifier.
+     * The {@link PipelineActionType} of this pipeline action
      *
-     * @return True if the funnel is a notifier, false otherwise.
+     * @return The {@link PipelineActionType} for this pipeline action, defaulting to STANDARD.
      */
-    public FunnelType funnelType() {
-        return FunnelType.STANDARD;
+    public PipelineActionType pipelineActionType() {
+        return PipelineActionType.STANDARD;
     }
 
     /**
-     * Get the known fields for this funnel. Can be empty if there are no specific keys required or needed.
+     * Get the known fields for this pipeline action. Can be empty if there are no specific keys required or needed.
      *
-     * @return List of Map keys for this funnel's argument, or an empty list.
+     * @return List of Map keys for this pipeline action's argument, or an empty list.
      */
     public List<String> getFields() {
         return Collections.emptyList();
     }
 
     /**
-     * Get the {@link GroovyCodeSource} for this contributor. Returns the existing one if it's not null.
+     * Get the {@link GroovyCodeSource} for this pipeline action. Returns the existing one if it's not null.
      * Throws an {@link IllegalStateException} if the script can't be loaded.
      * TODO: Validation that the script is a valid candidate for Plumber contribution - that may be in the parsing tho.
      *
@@ -97,8 +97,8 @@ public abstract class Funnel implements ExtensionPoint {
     public GroovyCodeSource getScriptSource() throws Exception {
         if (scriptSource == null) {
             String scriptUrlString = getClass().getPackage().getName().replace('$', '/').replace('.', '/')
-                    + '/' + getFunnelClass() + ".groovy";
-            // Expect that the script will be at package/name/className/funnelClass.groovy
+                    + '/' + getPipelineActionClass() + ".groovy";
+            // Expect that the script will be at package/name/className/pipelineActionClass.groovy
             URL scriptUrl = getClass().getClassLoader().getResource(scriptUrlString);
 
             try {
@@ -119,7 +119,7 @@ public abstract class Funnel implements ExtensionPoint {
      * ONLY TO BE RUN FROM WITHIN A CPS THREAD. Parses the script source and loads it.
      * TODO: Decide if we want to cache the resulting objects or just *shrug* and re-parse them every time.
      *
-     * @return The script object for this Plunger.
+     * @return The script object for this pipeline action.
      * @throws Exception if the script source cannot be loaded or we're called from outside a CpsThread.
      */
     @SuppressWarnings("unchecked")
@@ -137,24 +137,24 @@ public abstract class Funnel implements ExtensionPoint {
     }
 
     /**
-     * Returns all the registered {@link Funnel}s.
+     * Returns all the registered {@link PipelineAction}s.
      *
-     * @return All {@link Funnel}s.
+     * @return All {@link PipelineAction}s.
      */
-    public static ExtensionList<Funnel> all() {
-        return ExtensionList.lookup(Funnel.class);
+    public static ExtensionList<PipelineAction> all() {
+        return ExtensionList.lookup(PipelineAction.class);
     }
 
 
     /**
-     * Returns a map of all registered {@link Funnel}s by name.
+     * Returns a map of all registered {@link PipelineAction}s by name.
      *
-     * @return All {@link Funnel}s keyed by name.
+     * @return All {@link PipelineAction}s keyed by name.
      */
-    public static Map<String,Funnel> funnelMap() {
-        Map<String,Funnel> m = new HashMap<String, Funnel>();
+    public static Map<String,PipelineAction> pipelineActionMap() {
+        Map<String,PipelineAction> m = new HashMap<String, PipelineAction>();
 
-        for (Funnel p : all()) {
+        for (PipelineAction p : all()) {
             m.put(p.getName(), p);
         }
 
@@ -162,42 +162,42 @@ public abstract class Funnel implements ExtensionPoint {
     }
 
     /**
-     * Finds a {@link Funnel} with the given name.
+     * Finds a {@link PipelineAction} with the given name.
      *
-     * @return The funnel for the given name if it exists.
+     * @return The pipeline action for the given name if it exists.
      */
-    private static Funnel getFunnelFromAll(String name) {
-        return funnelMap().get(name);
+    private static PipelineAction getPipelineActionFromName(String name) {
+        return pipelineActionMap().get(name);
     }
 
     /**
-     * Finds a {@link Funnel} of standard type with the given name.
+     * Finds a {@link PipelineAction} of standard type with the given name.
      *
-     * @param name name of the funnel to get
-     * @return The funnel for the given name if it exists, null if no such funnel exists, and an exception if a funnel
-     *           of a type other than standard exists for that name.
-     * @throws IllegalArgumentException
+     * @param name name of the pipeline action to get
+     * @return The pipeline action for the given name if it exists, null if no such pipeline action exists, and an
+     *           exception if a pipeline action of a type other than standard exists for that name.
+     * @throws IllegalArgumentException if a pipeline action of a type other than STANDARD exists with the given name.
      */
-    public static Funnel getFunnel(String name) throws IllegalArgumentException {
-        return getFunnel(name, FunnelType.STANDARD);
+    public static PipelineAction getPipelineAction(String name) throws IllegalArgumentException {
+        return getPipelineAction(name, PipelineActionType.STANDARD);
     }
 
     /**
-     * Finds a {@link Funnel} that is of the given funnel type with the given name.
+     * Finds a {@link PipelineAction} that is of the given pipeline action type with the given name.
      *
-     * @param name The name of the funnel to get
-     * @param type The type of the funnel to get
+     * @param name The name of the pipeline action to get
+     * @param type The type of the pipeline action to get
      *
-     * @return The funnel for the given name if it exists, null if no such funnel exists, and an exception if
-     *           a funnel of a different type exists for that name.
+     * @return The pipeline action for the given name if it exists, null if no such pipeline action exists, and an
+     *           exception if a pipeline action of a different type exists for that name.
      *
-     * @throws IllegalArgumentException if a funnel of a different type exists with the given name.
+     * @throws IllegalArgumentException if a pipeline action of a different type exists with the given name.
      */
-    public static Funnel getFunnel(String name, FunnelType type) throws IllegalArgumentException {
-        Funnel p = getFunnelFromAll(name);
+    public static PipelineAction getPipelineAction(String name, PipelineActionType type) throws IllegalArgumentException {
+        PipelineAction p = getPipelineActionFromName(name);
 
-        if (p != null && p.funnelType() != type) {
-            throw new IllegalArgumentException("Funnel with name " + name + " exists but is not of type '" + type.getType() + "'.");
+        if (p != null && p.pipelineActionType() != type) {
+            throw new IllegalArgumentException("PipelineAction with name " + name + " exists but is not of type '" + type.getType() + "'.");
         }
 
         return p;

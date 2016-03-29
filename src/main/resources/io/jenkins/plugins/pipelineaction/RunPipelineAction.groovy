@@ -21,36 +21,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.jenkins.plugins.pipelinefunnel.funnels
+package io.jenkins.plugins.pipelineaction
 
+import com.cloudbees.groovy.cps.NonCPS
 import org.jenkinsci.plugins.workflow.cps.CpsScript
 
-
-class InputImpl implements Serializable {
-
+// TODO: May want to move this to an actual class extending Step to avoid some weirdness.
+class RunPipelineAction implements Serializable {
     CpsScript script
-    List<String> fields
 
-    public InputImpl(CpsScript script, List<String> fields) {
+    RunPipelineAction(CpsScript script) {
         this.script = script
-        this.fields = fields
     }
 
-    def call(Map<String,Object> args) {
-        def id
-        if (args.containsKey("id") && args.id != null) {
-            id = args.id
-        }
+    def call(Map args) {
+        return call(PipelineActionType.STANDARD, args)
+    }
 
-        if (args.containsKey("text") && args.text != null) {
-            if (id != null) {
-                script.input(message: args.text, id: id)
-            } else {
-                script.input(message: args.text)
-            }
-        } else {
-            script.error("Non-null 'text' must be specified with 'input' action.")
-        }
+    def call(String type, Map args) {
+        return call(PipelineActionType.fromString(type), args)
+    }
 
+    def call(PipelineActionType type, Map args) {
+        String name = args?.name
+
+        if (name == null) {
+            name = "script"
+        }
+        
+        return getPipelineAction(name, type)?.call(args)
+    }
+
+    @NonCPS
+    def getPipelineAction(String name, PipelineActionType type) {
+        return PipelineAction.getPipelineAction(name, type)?.getScript(script)
     }
 }

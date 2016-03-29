@@ -14,33 +14,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.jenkins.plugins.pipelinefunnel.funnels;
+package io.jenkins.plugins.pipelineaction.actions;
 
 import hudson.Extension;
-import io.jenkins.plugins.pipelinefunnel.Funnel;
+import io.jenkins.plugins.pipelineaction.PipelineAction;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Extension
-public class Input extends Funnel {
+public class Script extends PipelineAction {
 
     @Override
     public String getName() {
-        return "input";
+        return "script";
     }
 
     @Override
     public List<String> getFields() {
-        return Arrays.asList(
-                "text",
-                "id"
-        );
+        return Collections.singletonList("script");
     }
 
     @Override
-    public String getFunnelClass() {
-        return "InputImpl";
+    public String getPipelineActionClass() {
+        return "ScriptImpl";
     }
 
 }
