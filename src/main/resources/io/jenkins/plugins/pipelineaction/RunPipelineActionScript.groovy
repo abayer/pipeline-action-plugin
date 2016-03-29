@@ -23,34 +23,37 @@
  */
 package io.jenkins.plugins.pipelineaction
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
+import com.cloudbees.groovy.cps.NonCPS
 import org.jenkinsci.plugins.workflow.cps.CpsScript
 
-
-@SuppressFBWarnings(value="SE_NO_SERIALVERSIONID")
-public abstract class AbstractPipelineActionScript implements Serializable {
-
+// TODO: May want to move this to an actual class extending Step to avoid some weirdness.
+class RunPipelineActionScript implements Serializable {
     CpsScript script
-    Map<String,Boolean> fields
 
-    public AbstractPipelineActionScript(CpsScript script, Map<String,Boolean> fields) {
+    RunPipelineActionScript(CpsScript script) {
         this.script = script
-        this.fields = fields
     }
 
-    public Map copySpecifiedArgs(Map<String,Object> origArgs) {
-        return origArgs.findAll { it.key in fields.keySet() }
+    def call(Map args) {
+        return call(PipelineActionType.STANDARD, args)
     }
 
-    public List<String> missingRequiredArgs(Map<String,Object> origArgs) {
-        return requiredArgs().findAll { a ->
-            !origArgs.keySet().contains(a) || origArgs.get(a) == null
+    def call(String type, Map args) {
+        return call(PipelineActionType.fromString(type), args)
+    }
+
+    def call(PipelineActionType type, Map args) {
+        String name = args?.name
+
+        if (name == null) {
+            name = "script"
         }
+
+        return getPipelineAction(name, type)?.call(args)
     }
 
-    public List<String> requiredArgs() {
-        return fields.findAll { it.value }.collect { it.key }
+    @NonCPS
+    def getPipelineAction(String name, PipelineActionType type) {
+        return PipelineAction.getPipelineAction(name, type)?.getScript(script)
     }
-
-    public static final serialVersionUID = 1L
 }

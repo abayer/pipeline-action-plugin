@@ -22,5 +22,5 @@ THE SOFTWARE.
   This view is used to render the installed plugins page.
 -->
 <div>
-  Extension point for contributing Pipeline snippets from plugins
+  Extension point for contributing Pipeline snippets from other plugins
 </div>

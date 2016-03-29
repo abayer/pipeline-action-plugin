@@ -23,25 +23,42 @@
  */
 package io.jenkins.plugins.pipelineaction.actions
 
-import org.jenkinsci.plugins.workflow.cps.CpsScript
+import hudson.Extension
+import io.jenkins.plugins.pipelineaction.PipelineAction
+import io.jenkins.plugins.pipelineaction.PipelineActionType
 
 
-class ScriptScript extends AbstractPipelineActionScript {
+@Extension
+public class MailNotifier extends PipelineAction {
 
-    public ScriptScript(CpsScript script, Map<String,Boolean> fields) {
-        super(script, fields)
+    @Override
+    public String getName() {
+        return "email";
     }
 
-    def call(Map<String,Object> args) {
-        def missingArgs = missingRequiredArgs(args)
-        if (missingArgs.isEmpty()) {
-            if (script.isUnix()) {
-                script.sh(args.script)
-            } else {
-                script.bat(args.script)
-            }
-        } else {
-            script.error("Missing required field(s) for 'script' action: " + missingArgs.join(', '))
-        }
+    @Override
+    public Map<String, Boolean> getFields() {
+        return [
+                subject:  true,
+                body:     true,
+
+                to:       false,
+                from:     false,
+                charset:  false,
+                cc:       false,
+                bcc:      false,
+                replyTo:  false,
+                mimeType: false
+        ]
+    }
+
+    @Override
+    public String getPipelineActionClass() {
+        return "MailNotifierScript";
+    }
+
+    @Override
+    public PipelineActionType pipelineActionType() {
+        return PipelineActionType.NOTIFIER;
     }
 }

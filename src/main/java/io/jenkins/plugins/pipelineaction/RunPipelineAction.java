@@ -33,7 +33,7 @@ import org.jenkinsci.plugins.workflow.cps.GlobalVariable;
 import java.io.IOException;
 
 @Extension
-public class RunPipelineActionDSL extends GlobalVariable {
+public class RunPipelineAction extends GlobalVariable {
     @Override
     public String getName() {
         return "runPipelineAction";
@@ -43,7 +43,7 @@ public class RunPipelineActionDSL extends GlobalVariable {
     public Object getValue(CpsScript script) throws Exception {
         return script.getClass()
                 .getClassLoader()
-                .loadClass("io.jenkins.plugins.pipelineaction.RunPipelineAction")
+                .loadClass("io.jenkins.plugins.pipelineaction.RunPipelineActionScript")
                 .getConstructor(CpsScript.class)
                 .newInstance(script);
     }

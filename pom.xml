@@ -152,6 +152,8 @@
     <java.level>6</java.level>
     <groovy.version>1.8.9</groovy.version>
     <workflow.version>1.13</workflow.version>
+    <surefire.rerunFailingTestsCount>0</surefire.rerunFailingTestsCount>
+
   </properties>
   
   <repositories>

@@ -21,39 +21,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.jenkins.plugins.pipelineaction
+package io.jenkins.plugins.pipelineaction.actions
 
-import com.cloudbees.groovy.cps.NonCPS
-import org.jenkinsci.plugins.workflow.cps.CpsScript
+import hudson.Extension
+import io.jenkins.plugins.pipelineaction.PipelineAction
 
-// TODO: May want to move this to an actual class extending Step to avoid some weirdness.
-class RunPipelineAction implements Serializable {
-    CpsScript script
 
-    RunPipelineAction(CpsScript script) {
-        this.script = script
+@Extension
+public class Input extends PipelineAction {
+
+    @Override
+    public String getName() {
+        return "input";
     }
 
-    def call(Map args) {
-        return call(PipelineActionType.STANDARD, args)
+    @Override
+    public Map<String, Boolean> getFields() {
+        return [
+                message:   true,
+
+                id:        false,
+                ok:        false,
+                submitter: false
+        ]
     }
 
-    def call(String type, Map args) {
-        return call(PipelineActionType.fromString(type), args)
+    @Override
+    public String getPipelineActionClass() {
+        return "InputScript";
     }
 
-    def call(PipelineActionType type, Map args) {
-        String name = args?.name
-
-        if (name == null) {
-            name = "script"
-        }
-
-        return getPipelineAction(name, type)?.call(args)
-    }
-
-    @NonCPS
-    def getPipelineAction(String name, PipelineActionType type) {
-        return PipelineAction.getPipelineAction(name, type)?.getScript(script)
-    }
 }

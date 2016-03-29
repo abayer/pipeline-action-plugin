@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.jenkins.plugins.pipelineaction
+package io.jenkins.plugins.pipelineaction.actions
 
 import org.jenkinsci.plugins.workflow.cps.CpsScript
 

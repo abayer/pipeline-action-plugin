@@ -21,20 +21,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.jenkins.plugins.pipelineaction;
+package io.jenkins.plugins.pipelineaction.actions
 
-import hudson.Extension;
+import hudson.Extension
+import io.jenkins.plugins.pipelineaction.PipelineAction
+
 
 @Extension
-public class SimpleEchoPipelineAction extends PipelineAction {
+public class Script extends PipelineAction {
 
     @Override
     public String getName() {
-        return "simpleEcho";
+        return "script";
+    }
+
+    @Override
+    public Map<String, Boolean> getFields() {
+        return [ script: true ]
     }
 
     @Override
     public String getPipelineActionClass() {
-        return "SimpleEchoFunnelScript";
+        return "ScriptScript";
     }
+
 }

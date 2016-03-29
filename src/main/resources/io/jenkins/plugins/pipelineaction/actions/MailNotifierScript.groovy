@@ -23,7 +23,6 @@
  */
 package io.jenkins.plugins.pipelineaction.actions
 
-import io.jenkins.plugins.pipelineaction.AbstractPipelineActionScript
 import org.jenkinsci.plugins.workflow.cps.CpsScript
 
 
