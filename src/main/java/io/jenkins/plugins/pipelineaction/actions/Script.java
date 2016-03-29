@@ -16,11 +16,11 @@
  */
 package io.jenkins.plugins.pipelineaction.actions;
 
+import com.google.common.collect.ImmutableMap;
 import hudson.Extension;
 import io.jenkins.plugins.pipelineaction.PipelineAction;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.Map;
 
 @Extension
 public class Script extends PipelineAction {
@@ -31,13 +31,15 @@ public class Script extends PipelineAction {
     }
 
     @Override
-    public List<String> getFields() {
-        return Collections.singletonList("script");
+    public Map<String, Boolean> getFields() {
+        return ImmutableMap.<String,Boolean>builder()
+                .put("script", true)
+                .build();
     }
 
     @Override
     public String getPipelineActionClass() {
-        return "ScriptImpl";
+        return "ScriptScript";
     }
 
 }

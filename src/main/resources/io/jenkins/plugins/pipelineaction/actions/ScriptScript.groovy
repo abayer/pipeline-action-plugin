@@ -23,29 +23,26 @@
  */
 package io.jenkins.plugins.pipelineaction.actions
 
+import io.jenkins.plugins.pipelineaction.AbstractPipelineActionScript
 import org.jenkinsci.plugins.workflow.cps.CpsScript
 
 
-class ScriptImpl implements Serializable {
+class ScriptScript extends AbstractPipelineActionScript {
 
-    CpsScript script
-    List<String> fields
-
-    public ScriptImpl(CpsScript script, List<String> fields) {
-        this.script = script
-        this.fields = fields
+    public ScriptScript(CpsScript script, Map<String,Boolean> fields) {
+        super(script, fields)
     }
 
     def call(Map<String,Object> args) {
-        if (args.containsKey("script") && args.script != null) {
+        def missingArgs = missingRequiredArgs(args)
+        if (missingArgs.isEmpty()) {
             if (script.isUnix()) {
                 script.sh(args.script)
             } else {
                 script.bat(args.script)
             }
         } else {
-            script.error("Non-null 'script' must be specified with 'script' action.")
+            script.error("Missing required field(s) for 'script' action: " + missingArgs.join(', '))
         }
-
     }
 }

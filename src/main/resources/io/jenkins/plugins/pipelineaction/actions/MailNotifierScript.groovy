@@ -23,27 +23,22 @@
  */
 package io.jenkins.plugins.pipelineaction.actions
 
-import com.cloudbees.groovy.cps.NonCPS
+import io.jenkins.plugins.pipelineaction.AbstractPipelineActionScript
 import org.jenkinsci.plugins.workflow.cps.CpsScript
 
 
-class MailNotifierImpl implements Serializable {
+class MailNotifierScript extends AbstractPipelineActionScript {
 
-    CpsScript script
-    List<String> fields
-
-    public MailNotifierImpl(CpsScript script, List<String> fields) {
-        this.script = script
-        this.fields = fields
+    public MailNotifierScript(CpsScript script, Map<String,Boolean> fields) {
+        super(script, fields)
     }
 
     def call(Map<String,Object> args) {
-        def mailArgs = copyMailArgs(args)
-        script.mail(mailArgs)
-    }
-
-    @NonCPS
-    private Map copyMailArgs(Map<String,Object> origArgs) {
-        return origArgs.findAll { it.key in fields }
+        def missingArgs = missingRequiredArgs(args)
+        if (missingArgs.isEmpty()) {
+            script.mail(copySpecifiedArgs(args))
+        } else {
+            script.error("Missing required field(s) for 'email' action: " + missingArgs.join(', '))
+        }
     }
 }

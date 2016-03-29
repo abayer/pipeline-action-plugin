@@ -21,34 +21,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.jenkins.plugins.pipelineaction.actions
+package io.jenkins.plugins.pipelineaction
 
-import com.cloudbees.groovy.cps.NonCPS
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 import org.jenkinsci.plugins.workflow.cps.CpsScript
 
 
-class InputImpl implements Serializable {
+@SuppressFBWarnings(value="SE_NO_SERIALVERSIONID")
+public abstract class AbstractPipelineActionScript implements Serializable {
 
     CpsScript script
-    List<String> fields
+    Map<String,Boolean> fields
 
-    public InputImpl(CpsScript script, List<String> fields) {
+    public AbstractPipelineActionScript(CpsScript script, Map<String,Boolean> fields) {
         this.script = script
         this.fields = fields
     }
 
-    def call(Map<String,Object> args) {
-        if (args.containsKey("message") && args.message != null) {
-            script.input(copyInputArgs(args))
-        } else {
-            script.error("Non-null 'message' must be specified with 'input' action.")
+    public Map copySpecifiedArgs(Map<String,Object> origArgs) {
+        return origArgs.findAll { it.key in fields.keySet() }
+    }
+
+    public List<String> missingRequiredArgs(Map<String,Object> origArgs) {
+        return requiredArgs().findAll { a ->
+            !origArgs.keySet().contains(a) || origArgs.get(a) == null
         }
-
     }
 
-    @NonCPS
-    private Map copyInputArgs(Map<String,Object> origArgs) {
-        return origArgs.findAll { it.key in fields }
+    public List<String> requiredArgs() {
+        return fields.findAll { it.value }.collect { it.key }
     }
 
+    public static final serialVersionUID = 1L
 }

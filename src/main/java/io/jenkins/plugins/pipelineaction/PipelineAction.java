@@ -24,6 +24,7 @@
 
 package io.jenkins.plugins.pipelineaction;
 
+import com.google.common.collect.Lists;
 import groovy.lang.GroovyCodeSource;
 import hudson.ExtensionList;
 import hudson.ExtensionPoint;
@@ -80,10 +81,11 @@ public abstract class PipelineAction implements ExtensionPoint {
     /**
      * Get the known fields for this pipeline action. Can be empty if there are no specific keys required or needed.
      *
-     * @return List of Map keys for this pipeline action's argument, or an empty list.
+     * @return Map of known fields, with the values being booleans marking whether the field is required, or an empty
+     * map if no fields are specified.
      */
-    public List<String> getFields() {
-        return Collections.emptyList();
+    public Map<String, Boolean> getFields() {
+        return Collections.emptyMap();
     }
 
     /**
@@ -132,7 +134,7 @@ public abstract class PipelineAction implements ExtensionPoint {
                 .getShell()
                 .getClassLoader()
                 .parseClass(getScriptSource())
-                .getConstructor(CpsScript.class, List.class)
+                .getConstructor(CpsScript.class, Map.class)
                 .newInstance(cpsScript, getFields());
     }
 

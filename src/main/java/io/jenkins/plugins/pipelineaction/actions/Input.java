@@ -16,11 +16,11 @@
  */
 package io.jenkins.plugins.pipelineaction.actions;
 
+import com.google.common.collect.ImmutableMap;
 import hudson.Extension;
 import io.jenkins.plugins.pipelineaction.PipelineAction;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.Map;
 
 @Extension
 public class Input extends PipelineAction {
@@ -31,18 +31,18 @@ public class Input extends PipelineAction {
     }
 
     @Override
-    public List<String> getFields() {
-        return Arrays.asList(
-                "message",
-                "id",
-                "ok",
-                "submitter"
-        );
+    public Map<String, Boolean> getFields() {
+        return ImmutableMap.<String,Boolean>builder()
+                .put("message", true)
+                .put("id", false)
+                .put("ok", false)
+                .put("submitter", false)
+                .build();
     }
 
     @Override
     public String getPipelineActionClass() {
-        return "InputImpl";
+        return "InputScript";
     }
 
 }

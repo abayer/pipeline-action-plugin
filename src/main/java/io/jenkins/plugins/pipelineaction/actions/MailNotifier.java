@@ -16,12 +16,12 @@
  */
 package io.jenkins.plugins.pipelineaction.actions;
 
+import com.google.common.collect.ImmutableMap;
 import hudson.Extension;
 import io.jenkins.plugins.pipelineaction.PipelineAction;
 import io.jenkins.plugins.pipelineaction.PipelineActionType;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.Map;
 
 @Extension
 public class MailNotifier extends PipelineAction {
@@ -32,23 +32,23 @@ public class MailNotifier extends PipelineAction {
     }
 
     @Override
-    public List<String> getFields() {
-        return Arrays.asList(
-                "to",
-                "from",
-                "charset",
-                "subject",
-                "body",
-                "cc",
-                "bcc",
-                "replyTo",
-                "mimeType"
-        );
+    public Map<String, Boolean> getFields() {
+        return ImmutableMap.<String,Boolean>builder()
+                .put("to", false)
+                .put("from", false)
+                .put("charset", false)
+                .put("subject", true)
+                .put("body", true)
+                .put("cc", false)
+                .put("bcc", false)
+                .put("replyTo", false)
+                .put("mimeType", false)
+                .build();
     }
 
     @Override
     public String getPipelineActionClass() {
-        return "MailNotifierImpl";
+        return "MailNotifierScript";
     }
 
     @Override
