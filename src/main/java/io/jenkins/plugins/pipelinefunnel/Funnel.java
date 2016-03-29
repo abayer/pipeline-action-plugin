@@ -32,6 +32,7 @@ import org.jenkinsci.plugins.workflow.cps.CpsThread;
 
 import javax.annotation.Nonnull;
 import java.net.URL;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,13 +62,6 @@ public abstract class Funnel implements ExtensionPoint {
     public abstract @Nonnull String getName();
 
     /**
-     * Get the known fields for this funnel. Can be empty if there are no specific keys required or needed.
-     *
-     * @return List of Map keys for this funnel's argument, or an empty list.
-     */
-    public abstract List<String> getFields();
-
-    /**
      * The name of the class the funnel is implemented in under src/main/resources.
      *
      * @return The class name.
@@ -84,10 +78,18 @@ public abstract class Funnel implements ExtensionPoint {
     }
 
     /**
+     * Get the known fields for this funnel. Can be empty if there are no specific keys required or needed.
+     *
+     * @return List of Map keys for this funnel's argument, or an empty list.
+     */
+    public List<String> getFields() {
+        return Collections.emptyList();
+    }
+
+    /**
      * Get the {@link GroovyCodeSource} for this contributor. Returns the existing one if it's not null.
      * Throws an {@link IllegalStateException} if the script can't be loaded.
      * TODO: Validation that the script is a valid candidate for Plumber contribution - that may be in the parsing tho.
-     * TODO: Actual parsing - elsewhere, in a CPS context so that we can actually load it right.
      *
      * @return {@link GroovyCodeSource} for the contributor.
      * @throws Exception if the script source cannot be loaded.
