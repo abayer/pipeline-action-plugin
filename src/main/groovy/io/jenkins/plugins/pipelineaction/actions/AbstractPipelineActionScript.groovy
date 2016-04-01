@@ -24,6 +24,8 @@
 package io.jenkins.plugins.pipelineaction.actions
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
+import io.jenkins.plugins.pipelineaction.PipelineAction
+import io.jenkins.plugins.pipelineaction.PipelineActionType
 import org.jenkinsci.plugins.workflow.cps.CpsScript
 
 
@@ -31,15 +33,23 @@ import org.jenkinsci.plugins.workflow.cps.CpsScript
 public abstract class AbstractPipelineActionScript implements Serializable {
 
     CpsScript script
-    Map<String,Boolean> fields
+    Map<String,Boolean> actionFields
+    Boolean actionUsesNode
+    PipelineActionType actionType
+    String actionStepName
 
-    public AbstractPipelineActionScript(CpsScript script, Map<String,Boolean> fields) {
+    public AbstractPipelineActionScript(CpsScript script, PipelineAction actionDefinition = null) {
         this.script = script
-        this.fields = fields
+        if (actionDefinition != null) {
+            this.actionFields = actionDefinition.getFields()
+            this.actionUsesNode = actionDefinition.usesNode()
+            this.actionType = actionDefinition.pipelineActionType()
+            this.actionStepName = actionDefinition.getName()
+        }
     }
 
     public Map copySpecifiedArgs(Map<String,Object> origArgs) {
-        return origArgs.findAll { it.key in fields.keySet() }
+        return origArgs.findAll { it.key in actionFields.keySet() }
     }
 
     public List<String> missingRequiredArgs(Map<String,Object> origArgs) {
@@ -49,7 +59,7 @@ public abstract class AbstractPipelineActionScript implements Serializable {
     }
 
     public List<String> requiredArgs() {
-        return fields.findAll { it.value }.collect { it.key }
+        return actionFields.findAll { it.value }.collect { it.key }
     }
 
     public static final serialVersionUID = 1L

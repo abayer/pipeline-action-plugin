@@ -23,13 +23,14 @@
  */
 package io.jenkins.plugins.pipelineaction.actions
 
+import io.jenkins.plugins.pipelineaction.PipelineAction
 import org.jenkinsci.plugins.workflow.cps.CpsScript
 
 
 class ScriptScript extends AbstractPipelineActionScript {
 
-    public ScriptScript(CpsScript script, Map<String,Boolean> fields) {
-        super(script, fields)
+    public ScriptScript(CpsScript script, PipelineAction actionDefinition = null) {
+        super(script, actionDefinition)
     }
 
     def call(Map<String,Object> args) {

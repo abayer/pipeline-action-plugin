@@ -36,6 +36,11 @@ public class Input extends PipelineAction {
     }
 
     @Override
+    public Boolean usesNode() {
+        return false;
+    }
+
+    @Override
     public Map<String, Boolean> getFields() {
         return [
                 message:   true,

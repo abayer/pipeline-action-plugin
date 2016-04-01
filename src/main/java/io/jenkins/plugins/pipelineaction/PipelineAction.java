@@ -89,6 +89,15 @@ public abstract class PipelineAction implements ExtensionPoint {
     }
 
     /**
+     * If this action needs to run in a node context, this should be true.
+     *
+     * @return True if this action should run in a "node { ... }" context. Defaults to true.
+     */
+    public Boolean usesNode() {
+        return true;
+    }
+
+    /**
      * Get the {@link GroovyCodeSource} for this pipeline action. Returns the existing one if it's not null.
      * Throws an {@link IllegalStateException} if the script can't be loaded.
      * TODO: Validation that the script is a valid candidate for Plumber contribution - that may be in the parsing tho.
@@ -134,8 +143,8 @@ public abstract class PipelineAction implements ExtensionPoint {
                 .getShell()
                 .getClassLoader()
                 .parseClass(getScriptSource())
-                .getConstructor(CpsScript.class, Map.class)
-                .newInstance(cpsScript, getFields());
+                .getConstructor(CpsScript.class, PipelineAction.class)
+                .newInstance(cpsScript, this);
     }
 
     /**

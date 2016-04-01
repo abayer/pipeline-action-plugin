@@ -23,12 +23,13 @@
  */
 package io.jenkins.plugins.pipelineaction.actions
 
+import io.jenkins.plugins.pipelineaction.PipelineAction
 import org.jenkinsci.plugins.workflow.cps.CpsScript
 
 class SimpleEchoFunnelScript extends AbstractPipelineActionScript {
 
-    public SimpleEchoFunnelScript(CpsScript script, Map<String,Boolean> fields) {
-        super(script, fields)
+    public SimpleEchoFunnelScript(CpsScript script, PipelineAction actionDefinition = null) {
+        super(script, actionDefinition)
     }
 
     def call(Map args) {
