@@ -24,10 +24,10 @@
 
 package io.jenkins.plugins.pipelineaction;
 
-import com.google.common.collect.Lists;
 import groovy.lang.GroovyCodeSource;
 import hudson.ExtensionList;
 import hudson.ExtensionPoint;
+import hudson.util.Iterators;
 import org.jenkinsci.plugins.workflow.cps.CpsScript;
 import org.jenkinsci.plugins.workflow.cps.CpsThread;
 
@@ -35,7 +35,7 @@ import javax.annotation.Nonnull;
 import java.net.URL;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Iterator;
 import java.util.Map;
 
 import static org.apache.commons.lang.exception.ExceptionUtils.getFullStackTrace;
@@ -52,7 +52,7 @@ import static org.apache.commons.lang.exception.ExceptionUtils.getFullStackTrace
  */
 public abstract class PipelineAction implements ExtensionPoint {
 
-    private GroovyCodeSource scriptSource;
+    protected GroovyCodeSource scriptSource;
 
     /**
      * The name of the pipeline action. Should be unique.
@@ -149,13 +149,18 @@ public abstract class PipelineAction implements ExtensionPoint {
 
     /**
      * Returns all the registered {@link PipelineAction}s.
-     *
-     * @return All {@link PipelineAction}s.
      */
-    public static ExtensionList<PipelineAction> all() {
-        return ExtensionList.lookup(PipelineAction.class);
-    }
-
+    public static final Iterable<PipelineAction> ALL = new Iterable<PipelineAction>() {
+        @Override
+        public Iterator<PipelineAction> iterator() {
+            return new Iterators.FlattenIterator<PipelineAction, PipelineActionSet>(ExtensionList.lookup(PipelineActionSet.class).iterator()) {
+                @Override
+                protected Iterator<PipelineAction> expand(PipelineActionSet actionSet) {
+                    return actionSet.iterator();
+                }
+            };
+        }
+    };
 
     /**
      * Returns a map of all registered {@link PipelineAction}s by name.
@@ -165,7 +170,7 @@ public abstract class PipelineAction implements ExtensionPoint {
     public static Map<String,PipelineAction> pipelineActionMap() {
         Map<String,PipelineAction> m = new HashMap<String, PipelineAction>();
 
-        for (PipelineAction p : all()) {
+        for (PipelineAction p : ALL) {
             m.put(p.getName(), p);
         }
 
