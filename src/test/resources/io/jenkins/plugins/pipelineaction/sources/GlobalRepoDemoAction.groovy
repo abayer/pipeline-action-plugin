@@ -21,22 +21,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.jenkins.plugins.pipelineaction.actions
+package io.jenkins.plugins.pipelineaction.sources
 
-import hudson.Extension
 import io.jenkins.plugins.pipelineaction.PipelineAction
+import io.jenkins.plugins.pipelineaction.actions.AbstractPipelineActionScript
+import org.jenkinsci.plugins.workflow.cps.CpsScript
 
 
-@Extension
-public class SimpleEchoPipelineAction extends PipelineAction {
-
-    @Override
-    public String getName() {
-        return "simpleEcho";
+class GlobalRepoDemoAction extends AbstractPipelineActionScript {
+    public GlobalRepoDemoAction(CpsScript script, PipelineAction actionDefinition) {
+        super(script, actionDefinition)
     }
 
-    @Override
-    public String getPipelineActionClass() {
-        return "SimpleEchoPipelineActionScript";
+    def call(Map args) {
+        for (int i = 0; i < args.entrySet().size(); i++) {
+            def e = args.entrySet().toList().get(i)
+            script.echo "echoing ${e.key} == ${e.value}"
+        }
     }
+
 }

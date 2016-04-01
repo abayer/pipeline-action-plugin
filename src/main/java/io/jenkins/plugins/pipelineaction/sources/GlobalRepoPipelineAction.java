@@ -14,9 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.jenkins.plugins.pipelineaction;
+package io.jenkins.plugins.pipelineaction.sources;
 
 import groovy.lang.GroovyCodeSource;
+import io.jenkins.plugins.pipelineaction.PipelineAction;
+import io.jenkins.plugins.pipelineaction.PipelineActionType;
 
 import javax.annotation.Nonnull;
 import java.util.Map;
@@ -73,13 +75,12 @@ public class GlobalRepoPipelineAction extends PipelineAction {
     }
 
     /**
-     * Get the {@link GroovyCodeSource} for this pipeline action. Returns the existing one if it's not null.
-     * Throws an {@link IllegalStateException} if the script can't be loaded.
-     * TODO: Validation that the script is a valid candidate for Plumber contribution - that may be in the parsing tho.
+     * Gets the {@link GroovyCodeSource} defined at initialization time.
      *
-     * @return {@link GroovyCodeSource} for the contributor.
-     * @throws Exception if the script source cannot be loaded.
+     * @return The code provided at creation.
+     * @throws Exception Inherited, never actually throws an exception.
      */
+    @Override
     public GroovyCodeSource getScriptSource() throws Exception {
         return scriptSource;
     }
