@@ -21,36 +21,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+package io.jenkins.plugins.pipelineaction.actions
 
-package io.jenkins.plugins.pipelineaction;
+import hudson.Extension
+import io.jenkins.plugins.pipelineaction.PipelineAction
+import io.jenkins.plugins.pipelineaction.PipelineActionType
 
-
-public enum PipelineActionType {
-
-    STANDARD("standard"),
-    NOTIFIER("notifier"),
-    SCM("scm"),
-    ;
-
-    private final String type;
-
-    PipelineActionType(String type) {
-        this.type = type;
+@Extension
+public class Git extends PipelineAction {
+    @Override
+    public String getName() {
+        return "git"
     }
 
-    public String getType() {
-        return type;
+    @Override
+    public Map<String, Boolean> getFields() {
+        return [
+                branch: true,
+                url:    true
+        ]
     }
 
-    public static PipelineActionType fromString(String t) throws IllegalArgumentException {
-        if (t != null) {
-            for (PipelineActionType f : PipelineActionType.values()) {
-                if (t.equalsIgnoreCase(f.getType())) {
-                    return f;
-                }
-            }
-        }
+    @Override
+    public String getPipelineActionClass() {
+        return "GitScript"
+    }
 
-        throw new IllegalArgumentException("No PipelineActionType with type '" + t + "' found.");
+    @Override
+    public PipelineActionType pipelineActionType() {
+        return PipelineActionType.SCM
     }
 }

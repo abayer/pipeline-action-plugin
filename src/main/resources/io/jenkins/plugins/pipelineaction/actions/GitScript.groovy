@@ -21,36 +21,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+package io.jenkins.plugins.pipelineaction.actions
 
-package io.jenkins.plugins.pipelineaction;
+import io.jenkins.plugins.pipelineaction.PipelineAction
+import org.jenkinsci.plugins.workflow.cps.CpsScript
 
 
-public enum PipelineActionType {
-
-    STANDARD("standard"),
-    NOTIFIER("notifier"),
-    SCM("scm"),
-    ;
-
-    private final String type;
-
-    PipelineActionType(String type) {
-        this.type = type;
+class GitScript extends AbstractPipelineActionScript {
+    public GitScript(CpsScript script, PipelineAction actionDefinition = null) {
+        super(script, actionDefinition)
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public static PipelineActionType fromString(String t) throws IllegalArgumentException {
-        if (t != null) {
-            for (PipelineActionType f : PipelineActionType.values()) {
-                if (t.equalsIgnoreCase(f.getType())) {
-                    return f;
-                }
-            }
+    def call(Map<String,Object> args) {
+        def missingArgs = missingRequiredArgs(args)
+        if (missingArgs.isEmpty()) {
+            script.checkout(scm: [$class: 'GitSCM',
+                                  branches: [[name: args.branch]],
+                                  userRemoteConfigs: [[url: args.url]]])
+        } else {
+            script.error("Missing required field(s) for 'git' action: " + missingArgs.join(', '))
         }
 
-        throw new IllegalArgumentException("No PipelineActionType with type '" + t + "' found.");
     }
+
 }
