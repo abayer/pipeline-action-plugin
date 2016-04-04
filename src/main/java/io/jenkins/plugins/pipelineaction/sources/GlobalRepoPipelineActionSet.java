@@ -47,6 +47,7 @@ public class GlobalRepoPipelineActionSet extends PipelineActionSet {
     /**
      * Rebuilds the list of {@link GlobalRepoPipelineAction}s and update {@link ExtensionList} accordingly.
      */
+    @Override
     public synchronized void rebuild() {
         File actionsDir = new File(repo.workspace, GlobalRepoPipelineAction.ACTIONS_PREFIX);
         // first time, build the initial list

@@ -26,6 +26,10 @@ import java.util.Iterator;
 
 public abstract class PipelineActionSet implements ExtensionPoint, Iterable<PipelineAction> {
 
+    public synchronized void rebuild() {
+        // No-op for default.
+    }
+
     @Extension
     @Restricted(NoExternalUse.class)
     public static class PluginProvidedPipelineActionSet extends PipelineActionSet {

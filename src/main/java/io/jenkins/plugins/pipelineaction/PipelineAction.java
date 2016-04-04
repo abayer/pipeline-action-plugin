@@ -28,6 +28,7 @@ import groovy.lang.GroovyCodeSource;
 import hudson.ExtensionList;
 import hudson.ExtensionPoint;
 import hudson.util.Iterators;
+import io.jenkins.plugins.pipelineaction.sources.GlobalRepoPipelineActionSet;
 import org.jenkinsci.plugins.workflow.cps.CpsScript;
 import org.jenkinsci.plugins.workflow.cps.CpsThread;
 
@@ -156,6 +157,8 @@ public abstract class PipelineAction implements ExtensionPoint {
             return new Iterators.FlattenIterator<PipelineAction, PipelineActionSet>(ExtensionList.lookup(PipelineActionSet.class).iterator()) {
                 @Override
                 protected Iterator<PipelineAction> expand(PipelineActionSet actionSet) {
+                    // TODO: Make this not a hack.
+                    actionSet.rebuild();
                     return actionSet.iterator();
                 }
             };
