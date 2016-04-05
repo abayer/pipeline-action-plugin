@@ -54,13 +54,13 @@ public class GlobalRepoPipelineActionSet extends PipelineActionSet {
         if (ours == null)
             ours = new CopyOnWriteList<PipelineAction>();
 
+        List<PipelineAction> list = new ArrayList<PipelineAction>();
+
         if (actionsDir.exists()) {
             Collection<File> children = FileUtils.listFiles(actionsDir,
                     null,
                     true // Recursive
             );
-
-            List<PipelineAction> list = new ArrayList<PipelineAction>();
 
             for (File child : children) {
                 if (!child.getName().endsWith(".groovy") || child.isDirectory())
@@ -85,9 +85,9 @@ public class GlobalRepoPipelineActionSet extends PipelineActionSet {
                     throw new IllegalStateException("Could not open script source - " + getFullStackTrace(e));
 
                 }
-                ours.replaceBy(list);
             }
         }
+        ours.replaceBy(list);
     }
 
     @Override

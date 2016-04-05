@@ -157,8 +157,6 @@ public abstract class PipelineAction implements ExtensionPoint {
             return new Iterators.FlattenIterator<PipelineAction, PipelineActionSet>(ExtensionList.lookup(PipelineActionSet.class).iterator()) {
                 @Override
                 protected Iterator<PipelineAction> expand(PipelineActionSet actionSet) {
-                    // TODO: Make this not a hack.
-                    actionSet.rebuild();
                     return actionSet.iterator();
                 }
             };
