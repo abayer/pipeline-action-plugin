@@ -16,8 +16,6 @@
  */
 package io.jenkins.plugins.pipelineaction.sources;
 
-import hudson.ExtensionFinder;
-import hudson.ExtensionList;
 import hudson.model.Result;
 import jenkins.model.Jenkins;
 import org.apache.commons.io.FileUtils;
@@ -27,7 +25,6 @@ import org.jenkinsci.plugins.workflow.job.WorkflowJob;
 import org.jenkinsci.plugins.workflow.job.WorkflowRun;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runners.model.Statement;
 import org.jvnet.hudson.test.RestartableJenkinsRule;
 

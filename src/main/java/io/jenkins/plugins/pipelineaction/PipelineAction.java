@@ -29,7 +29,6 @@ import groovy.lang.GroovyShell;
 import hudson.ExtensionList;
 import hudson.ExtensionPoint;
 import hudson.util.Iterators;
-import io.jenkins.plugins.pipelineaction.sources.GlobalRepoPipelineActionSet;
 import org.codehaus.groovy.control.MultipleCompilationErrorsException;
 import org.jenkinsci.plugins.workflow.cps.CpsScript;
 import org.jenkinsci.plugins.workflow.cps.CpsThread;

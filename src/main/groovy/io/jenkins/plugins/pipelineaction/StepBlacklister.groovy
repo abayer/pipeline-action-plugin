@@ -23,6 +23,7 @@
  */
 package io.jenkins.plugins.pipelineaction
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 import org.codehaus.groovy.ast.expr.MethodCallExpression
 import org.codehaus.groovy.ast.expr.VariableExpression
 import org.codehaus.groovy.control.CompilerConfiguration
@@ -30,6 +31,7 @@ import org.codehaus.groovy.control.customizers.SecureASTCustomizer
 import org.jenkinsci.plugins.workflow.cps.CpsScript
 
 
+@SuppressFBWarnings(value="SE_NO_SERIALVERSIONID")
 public class StepBlacklister {
     static final List<String> blacklisted = ["stage", "parallel", "node"]
 
