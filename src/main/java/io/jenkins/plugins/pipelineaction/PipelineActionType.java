@@ -30,6 +30,7 @@ public enum PipelineActionType {
     STANDARD("standard"),
     NOTIFIER("notifier"),
     SCM("scm"),
+    REPORTER("reporter"),
     ;
 
     private final String type;
