@@ -18,6 +18,7 @@ package io.jenkins.plugins.pipelineaction.sources;
 
 import hudson.ExtensionFinder;
 import hudson.ExtensionList;
+import hudson.model.Result;
 import jenkins.model.Jenkins;
 import org.apache.commons.io.FileUtils;
 import org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition;
@@ -26,6 +27,7 @@ import org.jenkinsci.plugins.workflow.job.WorkflowJob;
 import org.jenkinsci.plugins.workflow.job.WorkflowRun;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runners.model.Statement;
 import org.jvnet.hudson.test.RestartableJenkinsRule;
 
@@ -61,7 +63,6 @@ public class GlobalRepoPipelineActionTest {
                         outFile);
 
                 // Hack to deal with the lack of an actual commit.
-                // TODO: Figure out how to listen for changes in the first place!
                 globalRepoPipelineActionSet.rebuild();
                 WorkflowJob p = jenkins.createProject(WorkflowJob.class, "p");
 
@@ -80,5 +81,37 @@ public class GlobalRepoPipelineActionTest {
         });
     }
 
+    @Test
+    public void invalidStepsInAction() {
+        story.addStep(new Statement() {
+            @Override public void evaluate() throws Throwable {
+
+                File dir = new File(repo.workspace,"actions/io/jenkins/plugins/pipelineaction/sources");
+                dir.mkdirs();
+
+                File outFile = new File(dir, "InvalidStepsAction.groovy");
+                FileUtils.copyURLToFile(
+                        getClass().getResource("/io/jenkins/plugins/pipelineaction/sources/InvalidStepsAction.groovy"),
+                        outFile);
+
+                // Hack to deal with the lack of an actual commit.
+                globalRepoPipelineActionSet.rebuild();
+                WorkflowJob p = jenkins.createProject(WorkflowJob.class, "p");
+
+                p.setDefinition(new CpsFlowDefinition(
+                        "runPipelineAction(['name':'InvalidStepsAction',\n"
+                                + "pants:'trousers',\n"
+                                + "shirts:'polos'])\n"
+                ));
+
+                // get the build going
+                WorkflowRun b = p.scheduleBuild2(0).getStartCondition().get();
+                story.j.assertBuildStatus(Result.FAILURE, story.j.waitForCompletion(b));
+                story.j.assertLogContains("Blacklisted steps used in action", b);
+                story.j.assertLogContains("Expression [MethodCallExpression] is not allowed: script.node", b);
+            }
+        });
+
+    }
 
 }

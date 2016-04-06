@@ -25,10 +25,12 @@
 package io.jenkins.plugins.pipelineaction;
 
 import groovy.lang.GroovyCodeSource;
+import groovy.lang.GroovyShell;
 import hudson.ExtensionList;
 import hudson.ExtensionPoint;
 import hudson.util.Iterators;
 import io.jenkins.plugins.pipelineaction.sources.GlobalRepoPipelineActionSet;
+import org.codehaus.groovy.control.MultipleCompilationErrorsException;
 import org.jenkinsci.plugins.workflow.cps.CpsScript;
 import org.jenkinsci.plugins.workflow.cps.CpsThread;
 
@@ -140,9 +142,15 @@ public abstract class PipelineAction implements ExtensionPoint {
         if (c == null)
             throw new IllegalStateException("Expected to be called from CpsThread");
 
-        return c.getExecution()
-                .getShell()
-                .getClassLoader()
+        GroovyShell origShell = c.getExecution().getShell();
+        GroovyShell validationShell = StepBlacklister.getBlacklisterShell(origShell);
+        try {
+            validationShell.getClassLoader().parseClass(getScriptSource());
+        } catch (MultipleCompilationErrorsException e) {
+            throw new IllegalArgumentException("Blacklisted steps used in action - " + e.getMessage());
+        }
+
+        return origShell.getClassLoader()
                 .parseClass(getScriptSource())
                 .getConstructor(CpsScript.class, PipelineAction.class)
                 .newInstance(cpsScript, this);
