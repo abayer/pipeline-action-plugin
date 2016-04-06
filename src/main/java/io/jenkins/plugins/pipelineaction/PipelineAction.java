@@ -215,7 +215,7 @@ public abstract class PipelineAction implements ExtensionPoint {
     public static PipelineAction getPipelineAction(String name, PipelineActionType type) throws IllegalArgumentException {
         PipelineAction p = getPipelineActionFromName(name);
 
-        if (p != null && (p.pipelineActionType() != type && type != PipelineActionType.STANDARD)) {
+        if (p != null && (p.pipelineActionType() != type && type != PipelineActionType.ANY)) {
             throw new IllegalArgumentException("PipelineAction with name " + name + " exists but is not of type '" + type.getType() + "'.");
         }
 
