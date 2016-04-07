@@ -30,9 +30,13 @@ public enum PipelineActionType {
 
     @Whitelisted
     STANDARD("standard"),
+    @Whitelisted
     NOTIFIER("notifier"),
+    @Whitelisted
     SCM("scm"),
+    @Whitelisted
     REPORTER("reporter"),
+    @Whitelisted
     ANY("any"),
     ;
 
