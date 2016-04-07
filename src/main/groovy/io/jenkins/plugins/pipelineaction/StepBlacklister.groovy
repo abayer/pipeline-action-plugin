@@ -71,11 +71,12 @@ public class StepBlacklister {
                     && expr.getMethodAsString() in blacklisted) {
                     // If so, return false
                     false
+                } else {
+                    true
                 }
+            } else {
+                true
             }
-
-            // Fallback to true, in which case compilation can continue.
-            true
         } as SecureASTCustomizer.ExpressionChecker
 
         // Add the method check to the expression checkers on the AST customizer
