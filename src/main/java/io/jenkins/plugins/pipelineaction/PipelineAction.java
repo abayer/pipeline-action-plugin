@@ -30,6 +30,7 @@ import hudson.ExtensionList;
 import hudson.ExtensionPoint;
 import hudson.util.Iterators;
 import org.codehaus.groovy.control.MultipleCompilationErrorsException;
+import org.jenkinsci.plugins.scriptsecurity.sandbox.whitelists.Whitelisted;
 import org.jenkinsci.plugins.workflow.cps.CpsScript;
 import org.jenkinsci.plugins.workflow.cps.CpsThread;
 
@@ -135,6 +136,7 @@ public abstract class PipelineAction implements ExtensionPoint {
      * @throws Exception if the script source cannot be loaded or we're called from outside a CpsThread.
      */
     @SuppressWarnings("unchecked")
+    @Whitelisted
     public Object getScript(CpsScript cpsScript) throws Exception {
         CpsThread c = CpsThread.current();
         if (c == null)
@@ -204,6 +206,7 @@ public abstract class PipelineAction implements ExtensionPoint {
      *           exception if a pipeline action of a type other than standard exists for that name.
      * @throws IllegalArgumentException if a pipeline action of a type other than STANDARD exists with the given name.
      */
+    @Whitelisted
     public static PipelineAction getPipelineAction(String name) throws IllegalArgumentException {
         return getPipelineAction(name, PipelineActionType.STANDARD);
     }
@@ -219,6 +222,7 @@ public abstract class PipelineAction implements ExtensionPoint {
      *
      * @throws IllegalArgumentException if a pipeline action of a different type exists with the given name.
      */
+    @Whitelisted
     public static PipelineAction getPipelineAction(String name, PipelineActionType type) throws IllegalArgumentException {
         PipelineAction p = getPipelineActionFromName(name);
 

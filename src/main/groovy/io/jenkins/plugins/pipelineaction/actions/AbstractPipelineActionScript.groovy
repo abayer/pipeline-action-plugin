@@ -26,6 +26,7 @@ package io.jenkins.plugins.pipelineaction.actions
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 import io.jenkins.plugins.pipelineaction.PipelineAction
 import io.jenkins.plugins.pipelineaction.PipelineActionType
+import org.jenkinsci.plugins.scriptsecurity.sandbox.whitelists.Whitelisted
 import org.jenkinsci.plugins.workflow.cps.CpsScript
 
 /**
@@ -38,6 +39,7 @@ public abstract class AbstractPipelineActionScript implements Serializable {
     /**
      * Used for all Pipeline step invocation.
      */
+    @Whitelisted
     CpsScript script
 
     /**
@@ -104,6 +106,7 @@ public abstract class AbstractPipelineActionScript implements Serializable {
      * @param origArgs A map of field names to values.
      * @return A new map that's effectively a subset of the original.
      */
+    @Whitelisted
     public Map copySpecifiedArgs(Map<String,Object> origArgs) {
         return origArgs.findAll { it.key in actionFields.keySet() }
     }
@@ -115,6 +118,7 @@ public abstract class AbstractPipelineActionScript implements Serializable {
      * @param origArgs A map of field names to values.
      * @return A list of the names of any required fields that are missing from the original map.
      */
+    @Whitelisted
     public List<String> missingRequiredArgs(Map<String,Object> origArgs) {
         return requiredArgs().findAll { a ->
             !origArgs.keySet().contains(a) || origArgs.get(a) == null
@@ -126,6 +130,7 @@ public abstract class AbstractPipelineActionScript implements Serializable {
      *
      * @return a list of field names from {@code actionFields} where the value is true (meaning they're required)
      */
+    @Whitelisted
     public List<String> requiredArgs() {
         return actionFields.findAll { it.value }.collect { it.key }
     }

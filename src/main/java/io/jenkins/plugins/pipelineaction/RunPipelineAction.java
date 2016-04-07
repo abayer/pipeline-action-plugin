@@ -49,14 +49,16 @@ public class RunPipelineAction extends GlobalVariable {
     }
 
     @Extension
-    public static class MiscWhitelist extends ProxyWhitelist {
-        public MiscWhitelist() throws IOException {
-            // TODO: Don't do this. Figure out whitelisting better.
-            super(new BlanketWhitelist(), new StaticWhitelist(
+    public static class PipelineActionWhitelist extends ProxyWhitelist {
+        public PipelineActionWhitelist() throws IOException {
+            super(new StaticWhitelist(
                     "method java.util.Map$Entry getKey",
                     "method java.util.Map$Entry getValue",
+                    "method java.util.Map entrySet",
                     "staticField java.lang.System err",
-                    "method java.io.PrintStream println java.lang.String"
+                    "method java.io.PrintStream println java.lang.String",
+                    "method java.util.Collection isEmpty",
+                    "staticMethod org.codehaus.groovy.runtime.DefaultGroovyMethods toList java.util.Collection"
 
             ));
         }

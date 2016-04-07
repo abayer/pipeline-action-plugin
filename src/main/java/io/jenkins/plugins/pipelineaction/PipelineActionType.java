@@ -24,9 +24,11 @@
 
 package io.jenkins.plugins.pipelineaction;
 
+import org.jenkinsci.plugins.scriptsecurity.sandbox.whitelists.Whitelisted;
 
 public enum PipelineActionType {
 
+    @Whitelisted
     STANDARD("standard"),
     NOTIFIER("notifier"),
     SCM("scm"),
