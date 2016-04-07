@@ -24,12 +24,21 @@ import org.kohsuke.accmod.restrictions.NoExternalUse;
 
 import java.util.Iterator;
 
+/**
+ * A collection of {@link PipelineAction}s.
+ */
 public abstract class PipelineActionSet implements ExtensionPoint, Iterable<PipelineAction> {
 
+    /**
+     * The default case does not need to actually rebuild anything.
+     */
     public synchronized void rebuild() {
         // No-op for default.
     }
 
+    /**
+     * For {@link PipelineAction}s contributed via the classpath.
+     */
     @Extension
     @Restricted(NoExternalUse.class)
     public static class PluginProvidedPipelineActionSet extends PipelineActionSet {

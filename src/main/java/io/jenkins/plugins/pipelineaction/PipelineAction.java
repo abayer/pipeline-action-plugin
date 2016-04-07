@@ -102,7 +102,6 @@ public abstract class PipelineAction implements ExtensionPoint {
     /**
      * Get the {@link GroovyCodeSource} for this pipeline action. Returns the existing one if it's not null.
      * Throws an {@link IllegalStateException} if the script can't be loaded.
-     * TODO: Validation that the script is a valid candidate for Plumber contribution - that may be in the parsing tho.
      *
      * @return {@link GroovyCodeSource} for the contributor.
      * @throws Exception if the script source cannot be loaded.
@@ -141,6 +140,7 @@ public abstract class PipelineAction implements ExtensionPoint {
         if (c == null)
             throw new IllegalStateException("Expected to be called from CpsThread");
 
+        // Recreate the GroovyShell and validate that the PipelineAction doesn't have blacklisted steps.
         GroovyShell origShell = c.getExecution().getShell();
         GroovyShell validationShell = StepBlacklister.getBlacklisterShell(origShell);
         try {
