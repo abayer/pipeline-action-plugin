@@ -23,24 +23,29 @@
  */
 package io.jenkins.plugins.pipelineaction.actions
 
+import com.cloudbees.groovy.cps.NonCPS
 import io.jenkins.plugins.pipelineaction.PipelineAction
 import org.jenkinsci.plugins.workflow.cps.CpsScript
 
 
-class CatFileNotifierScript extends AbstractPipelineActionScript {
-    public CatFileNotifierScript(CpsScript script, PipelineAction actionDefinition = null) {
+class EchoToFileNotifierScript extends AbstractPipelineActionScript {
+    public EchoToFileNotifierScript(CpsScript script, PipelineAction actionDefinition = null) {
         super(script, actionDefinition)
     }
 
     def call(Map<String,Object> args) {
         def missingArgs = missingRequiredArgs(args)
         if (missingArgs.isEmpty()) {
-            def f = script.readFile(args.file)
-            script.echo(f)
+            script.writeFile(file: args.file, text: getFileText(args))
         } else {
-            script.error("Missing required field(s) for 'catFileNotifier' action: " + missingArgs.join(', '))
+            script.error("Missing required field(s) for 'echoToFileNotifier' action: " + missingArgs.join(', '))
         }
 
+    }
+
+    @NonCPS
+    def getFileText(Map<String,Object> args) {
+        return args.collect { "${it.key}:${it.value}" }.join("\n")
     }
 
 }

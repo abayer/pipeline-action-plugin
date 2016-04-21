@@ -29,10 +29,10 @@ import io.jenkins.plugins.pipelineaction.PipelineActionType
 
 
 @Extension
-public class CatFileNotifier extends PipelineAction {
+public class EchoToFileNotifier extends PipelineAction {
     @Override
     public String getName() {
-        return "catFileNotifier"
+        return "echoToFileNotifier"
     }
 
     @Override
@@ -44,7 +44,7 @@ public class CatFileNotifier extends PipelineAction {
 
     @Override
     public String getPipelineActionClass() {
-        return "CatFileNotifierScript"
+        return "EchoToFileNotifierScript"
     }
 
     @Override
