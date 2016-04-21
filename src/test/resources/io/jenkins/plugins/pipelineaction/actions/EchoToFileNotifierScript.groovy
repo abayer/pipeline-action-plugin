@@ -23,7 +23,6 @@
  */
 package io.jenkins.plugins.pipelineaction.actions
 
-import com.cloudbees.groovy.cps.NonCPS
 import io.jenkins.plugins.pipelineaction.PipelineAction
 import org.jenkinsci.plugins.workflow.cps.CpsScript
 
@@ -43,9 +42,13 @@ class EchoToFileNotifierScript extends AbstractPipelineActionScript {
 
     }
 
-    @NonCPS
     def getFileText(Map<String,Object> args) {
-        return args.collect { "${it.key}:${it.value}" }.join("\n")
+        def lines = []
+        for (int i = 0; i < args.entrySet().size(); i++) {
+            def e = args.entrySet().toList().get(i)
+            lines.add("${e.key}:${e.value}\n")
+        }
+        return lines.join("")
     }
 
 }
