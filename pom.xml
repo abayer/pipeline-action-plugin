@@ -27,7 +27,7 @@
   <parent>
     <groupId>org.jenkins-ci.plugins</groupId>
     <artifactId>plugin</artifactId>
-    <version>2.2</version>
+    <version>2.5</version>
   </parent>
 
   <groupId>org.jenkins-ci.plugins</groupId>
@@ -157,10 +157,10 @@
   </dependencies>
   
   <properties>
-    <jenkins.version>1.609.3</jenkins.version>
-    <jenkins-test-harness.version>2.1</jenkins-test-harness.version>
-    <java.level>6</java.level>
-    <groovy.version>1.8.9</groovy.version>
+    <jenkins.version>2.0</jenkins.version>
+    <jenkins-test-harness.version>2.7</jenkins-test-harness.version>
+    <java.level>7</java.level>
+    <groovy.version>2.4.6</groovy.version>
     <workflow.version>1.13</workflow.version>
     <surefire.rerunFailingTestsCount>0</surefire.rerunFailingTestsCount>
 
